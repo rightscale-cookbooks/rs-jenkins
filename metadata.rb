@@ -2,9 +2,9 @@ name             'rightscale_jenkins'
 maintainer       'RightScale, Inc.'
 maintainer_email 'cookbooks@rightscale.com'
 license          'Apache 2.0'
-description      "Installs/Configures Jenkins"
+description      'Installs/Configures Jenkins'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          "13.5.0"
+version          '13.5.0'
 
 supports "centos"
 supports "redhat"
