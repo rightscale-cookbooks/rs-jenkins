@@ -100,16 +100,16 @@ end
 # https://wush.net/trac/rightscale/ticket/5651
 # Once this ticket is fixed, a new 'monkey' group can be created and any user
 # belonging to that group will be allowed to run monkey tests.
+#
 template node[:rightscale_jenkins][:system_config_file] do
   source "jenkins_system_config.erb"
-  cookbook "jenkins"
   owner node[:rightscale_jenkins][:server][:system_user]
   group node[:rightscale_jenkins][:server][:system_group]
   mode 0644
   variables(
-    :rightscale_jenkins_home => node[:rightscale_jenkins][:server][:home],
-    :rightscale_jenkins_user => node[:rightscale_jenkins][:server][:system_user],
-    :rightscale_jenkins_port => node[:rightscale_jenkins][:server][:port]
+    :jenkins_home => node[:rightscale_jenkins][:server][:home],
+    :jenkins_user => node[:rightscale_jenkins][:server][:system_user],
+    :jenkins_port => node[:rightscale_jenkins][:server][:port]
   )
 end
 
