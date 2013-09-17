@@ -17,7 +17,9 @@
 # limitations under the License.
 #
 
-rightscale_marker
+marker "recipe_start_rightscale" do
+  template "rightscale_audit_entry.erb"
+end
 
 if node[:rightscale_jenkins][:attach_slave_at_boot] == "true"
 	log " Attaching to master node at boot..."

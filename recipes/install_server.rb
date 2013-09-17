@@ -17,7 +17,9 @@
 # limitations under the License.
 #
 
-rightscale_marker
+marker "recipe_start_rightscale" do
+  template "rightscale_audit_entry.erb"
+end
 
 # Create the home directory for Jenkins.
 directory node[:rightscale_jenkins][:server][:home] do

@@ -17,7 +17,9 @@
 # limitations under the License.
 #
 
-rightscale_marker
+marker "recipe_start_rightscale" do
+  template "rightscale_audit_entry.erb"
+end
 
 # The java package to install based on platform family
 node[:rightscale_jenkins][:java_package] = value_for_platform_family(
