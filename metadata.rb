@@ -12,6 +12,7 @@ supports "ubuntu"
 
 depends "rightscale"
 depends "sys_firewall"
+depends "marker"
 
 recipe "rightscale_jenkins::default",
   "Install the dependencies for jenkins."
