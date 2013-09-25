@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: rightscale_jenkins
+# Cookbook Name:: rs-jenkins
 # Recipe:: default
 #
 # Copyright (C) 2013 RightScale, Inc.
@@ -17,25 +17,27 @@
 # limitations under the License.
 #
 
-rightscale_marker
+marker "recipe_start_rightscale" do
+  template "rightscale_audit_entry.erb"
+end
 
 # The java package to install based on platform family
-node[:rightscale_jenkins][:java_package] = value_for_platform_family(
+node[:'rs-jenkins'][:java_package] = value_for_platform_family(
   "debian" => "openjdk-6-jre",
   "default" => "java-1.6.0-openjdk"
 )
 
 # The jenkins system configuration file location based on platform family
-node[:rightscale_jenkins][:system_config_file] = value_for_platform_family(
+node[:'rs-jenkins'][:system_config_file] = value_for_platform_family(
   "debian" => "/etc/default/jenkins",
   "default" => "/etc/sysconfig/jenkins"
 )
 
 # Install the java package required by Jenkins
-package node[:rightscale_jenkins][:java_package]
+package node[:'rs-jenkins'][:java_package]
 
 # Install the jenkins_api_client gem
 chef_gem "jenkins_api_client" do
-  version node[:rightscale_jenkins][:server][:jenkins_api_client_version]
+  version node[:'rs-jenkins'][:server][:jenkins_api_client_version]
   action :install
 end
