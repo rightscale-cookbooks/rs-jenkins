@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: rightscale_jenkins
+# Cookbook Name:: rs-jenkins
 # Recipe:: install_server
 #
 # Copyright (C) 2013 RightScale, Inc.
@@ -22,19 +22,19 @@ marker "recipe_start_rightscale" do
 end
 
 # Create the home directory for Jenkins.
-directory node[:rightscale_jenkins][:server][:home] do
+directory node[:'rs-jenkins'][:server][:home] do
   mode 0755
   recursive true
-  owner node[:rightscale_jenkins][:server][:system_user]
-  group node[:rightscale_jenkins][:server][:system_group]
+  owner node[:'rs-jenkins'][:server][:system_user]
+  group node[:'rs-jenkins'][:server][:system_group]
 end
 
 # Create Jenkins private key file
-file node[:rightscale_jenkins][:private_key_file] do
-  content node[:rightscale_jenkins][:private_key]
+file node[:'rs-jenkins'][:private_key_file] do
+  content node[:'rs-jenkins'][:private_key]
   mode 0600
-  owner node[:rightscale_jenkins][:server][:system_user]
-  group node[:rightscale_jenkins][:server][:system_group]
+  owner node[:'rs-jenkins'][:server][:system_user]
+  group node[:'rs-jenkins'][:server][:system_group]
   action :create
 end
 
@@ -54,18 +54,18 @@ when "centos"
   # If a version is specified, include the release information. This is only
   # required for CentOS. The release appears to be the same for all Jenkins
   # versions available.
-  node[:rightscale_jenkins][:server][:version] += "-1.1" \
-    if node[:rightscale_jenkins][:server][:version]
+  node[:'rs-jenkins'][:server][:version] += "-1.1" \
+    if node[:'rs-jenkins'][:server][:version]
   # Install Jenkins package
   package "jenkins" do
-    version node[:rightscale_jenkins][:server][:version]
+    version node[:'rs-jenkins'][:server][:version]
   end
 
 when "ubuntu"
   # Download the deb package file for the specified version
-  remote_file "/tmp/jenkins_#{node[:rightscale_jenkins][:server][:version]}_all.deb" do
+  remote_file "/tmp/jenkins_#{node[:'rs-jenkins'][:server][:version]}_all.deb" do
     source "http://pkg.jenkins-ci.org/debian/binary/" +
-      "jenkins_#{node[:rightscale_jenkins][:server][:version]}_all.deb"
+      "jenkins_#{node[:'rs-jenkins'][:server][:version]}_all.deb"
   end
 
   # dpkg doesn't resolve and install all dependencies and some of the packages
@@ -86,7 +86,7 @@ when "ubuntu"
 
   # Install Jenkins from the downloaded deb file
   dpkg_package "jenkins" do
-    source "/tmp/jenkins_#{node[:rightscale_jenkins][:server][:version]}_all.deb"
+    source "/tmp/jenkins_#{node[:'rs-jenkins'][:server][:version]}_all.deb"
     action :install
   end
 
@@ -103,42 +103,42 @@ end
 # Once this ticket is fixed, a new 'monkey' group can be created and any user
 # belonging to that group will be allowed to run monkey tests.
 #
-template node[:rightscale_jenkins][:system_config_file] do
+template node[:'rs-jenkins'][:system_config_file] do
   source "jenkins_system_config.erb"
-  owner node[:rightscale_jenkins][:server][:system_user]
-  group node[:rightscale_jenkins][:server][:system_group]
+  owner node[:'rs-jenkins'][:server][:system_user]
+  group node[:'rs-jenkins'][:server][:system_group]
   mode 0644
   variables(
-    :jenkins_home => node[:rightscale_jenkins][:server][:home],
-    :jenkins_user => node[:rightscale_jenkins][:server][:system_user],
-    :jenkins_port => node[:rightscale_jenkins][:server][:port]
+    :jenkins_home => node[:'rs-jenkins'][:server][:home],
+    :jenkins_user => node[:'rs-jenkins'][:server][:system_user],
+    :jenkins_port => node[:'rs-jenkins'][:server][:port]
   )
 end
 
 # Make sure the permission for jenkins log directory set correctly
 directory "/var/log/jenkins" do
   mode 0750
-  owner node[:rightscale_jenkins][:server][:system_user]
-  group node[:rightscale_jenkins][:server][:system_group]
+  owner node[:'rs-jenkins'][:server][:system_user]
+  group node[:'rs-jenkins'][:server][:system_group]
 end
 
 # Create the Jenkins user directory
-directory "#{node[:rightscale_jenkins][:server][:home]}/users/" +
-  "#{node[:rightscale_jenkins][:server][:user_name]}" do
+directory "#{node[:'rs-jenkins'][:server][:home]}/users/" +
+  "#{node[:'rs-jenkins'][:server][:user_name]}" do
   recursive true
   mode 0755
-  owner node[:rightscale_jenkins][:server][:system_user]
-  group node[:rightscale_jenkins][:server][:system_group]
+  owner node[:'rs-jenkins'][:server][:system_user]
+  group node[:'rs-jenkins'][:server][:system_group]
 end
 
 # Create the Jenkins configuration file to include matrix based security
-template "#{node[:rightscale_jenkins][:server][:home]}/config.xml" do
+template "#{node[:'rs-jenkins'][:server][:home]}/config.xml" do
   source "jenkins_config.xml.erb"
   mode 0644
-  owner node[:rightscale_jenkins][:server][:system_user]
-  group node[:rightscale_jenkins][:server][:system_group]
+  owner node[:'rs-jenkins'][:server][:system_user]
+  group node[:'rs-jenkins'][:server][:system_group]
   variables(
-    :user => node[:rightscale_jenkins][:server][:user_name]
+    :user => node[:'rs-jenkins'][:server][:user_name]
   )
 end
 
@@ -147,21 +147,21 @@ end
 chef_gem "bcrypt-ruby"
 
 require "bcrypt"
-node[:rightscale_jenkins][:server][:password_encrypted] = ::BCrypt::Password.create(
-  node[:rightscale_jenkins][:server][:password]
+node[:'rs-jenkins'][:server][:password_encrypted] = ::BCrypt::Password.create(
+  node[:'rs-jenkins'][:server][:password]
 )
 
 # Create Jenkins user configuration file.
-template "#{node[:rightscale_jenkins][:server][:home]}/users/" +
-  "#{node[:rightscale_jenkins][:server][:user_name]}/config.xml" do
+template "#{node[:'rs-jenkins'][:server][:home]}/users/" +
+  "#{node[:'rs-jenkins'][:server][:user_name]}/config.xml" do
   source "jenkins_user_config.xml.erb"
   mode 0644
-  owner node[:rightscale_jenkins][:server][:system_user]
-  group node[:rightscale_jenkins][:server][:system_group]
+  owner node[:'rs-jenkins'][:server][:system_user]
+  group node[:'rs-jenkins'][:server][:system_group]
   variables(
-    :user_full_name => node[:rightscale_jenkins][:server][:user_full_name],
-    :password_encrypted => node[:rightscale_jenkins][:server][:password_encrypted],
-    :email => node[:rightscale_jenkins][:server][:user_email]
+    :user_full_name => node[:'rs-jenkins'][:server][:user_full_name],
+    :password_encrypted => node[:'rs-jenkins'][:server][:password_encrypted],
+    :email => node[:'rs-jenkins'][:server][:user_email]
   )
 end
 
@@ -174,5 +174,5 @@ sys_firewall "8080"
 
 right_link_tag "jenkins:active=true"
 right_link_tag "jenkins:master=true"
-right_link_tag "jenkins:listen_ip=#{node[:rightscale_jenkins][:ip]}"
-right_link_tag "jenkins:listen_port=#{node[:rightscale_jenkins][:server][:port]}"
+right_link_tag "jenkins:listen_ip=#{node[:'rs-jenkins'][:ip]}"
+right_link_tag "jenkins:listen_port=#{node[:'rs-jenkins'][:server][:port]}"

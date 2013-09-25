@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: rightscale_jenkins
+# Cookbook Name:: rs-jenkins
 # Recipe:: do_attach_request
 #
 # Copyright (C) 2013 RightScale, Inc.
@@ -25,11 +25,11 @@ require "jenkins_api_client"
 
 # Add the jenkins public key to allow master to connect to the slave
 execute "add jenkins public key to authorized keys" do
-  command "echo \"#{node[:rightscale_jenkins][:public_key]}\"" +
+  command "echo \"#{node[:'rs-jenkins'][:public_key]}\"" +
     " >> #{ENV['HOME']}/.ssh/authorized_keys"
   not_if do
     File.open("#{ENV['HOME']}/.ssh/authorized_keys").lines.any? do |line|
-      line.chomp == node[:rightscale_jenkins][:public_key]
+      line.chomp == node[:'rs-jenkins'][:public_key]
     end
   end
 end
@@ -64,31 +64,31 @@ r.run_action(:create)
 # Attach the slave to the master using the API
 ruby_block "Attach slave using Jenkins API" do
   block do
-    if node[:rightscale_jenkins][:slave][:attach_status] == :attached
+    if node[:'rs-jenkins'][:slave][:attach_status] == :attached
       log "  Already attached to Jenkins master."
     else
       client = JenkinsApi::Client.new(
         :server_ip => master_ip,
         :server_port => master_port,
-        :username => node[:rightscale_jenkins][:server][:user_name],
-        :password => node[:rightscale_jenkins][:server][:password]
+        :username => node[:'rs-jenkins'][:server][:user_name],
+        :password => node[:'rs-jenkins'][:server][:password]
       )
 
       client.node.create_dump_slave(
-        :name => node[:rightscale_jenkins][:slave][:name],
-        :slave_user => node[:rightscale_jenkins][:slave][:user],
-        :slave_host => node[:rightscale_jenkins][:ip],
-        :private_key_file => node[:rightscale_jenkins][:private_key_file],
-        :mode => node[:rightscale_jenkins][:slave][:mode],
-        :executors => node[:rightscale_jenkins][:slave][:executors]
+        :name => node[:'rs-jenkins'][:slave][:name],
+        :slave_user => node[:'rs-jenkins'][:slave][:user],
+        :slave_host => node[:'rs-jenkins'][:ip],
+        :private_key_file => node[:'rs-jenkins'][:private_key_file],
+        :mode => node[:'rs-jenkins'][:slave][:mode],
+        :executors => node[:'rs-jenkins'][:slave][:executors]
       )
-      node[:rightscale_jenkins][:slave][:attach_status] = :attached
+      node[:'rs-jenkins'][:slave][:attach_status] = :attached
     end
   end
 end
 
 # Add slave tags with the information unique to the slave
 right_link_tag "jenkins:slave=true"
-right_link_tag "jenkins:slave_name=#{node[:rightscale_jenkins][:slave][:name]}"
-right_link_tag "jenkins:slave_mode=#{node[:rightscale_jenkins][:slave][:mode]}"
-right_link_tag "jenkins:slave_ip=#{node[:rightscale_jenkins][:ip]}"
+right_link_tag "jenkins:slave_name=#{node[:'rs-jenkins'][:slave][:name]}"
+right_link_tag "jenkins:slave_mode=#{node[:'rs-jenkins'][:slave][:mode]}"
+right_link_tag "jenkins:slave_ip=#{node[:'rs-jenkins'][:ip]}"
