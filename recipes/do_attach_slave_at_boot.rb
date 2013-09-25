@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: rightscale_jenkins
+# Cookbook Name:: rs-jenkins
 # Recipe:: do_attach_slave_at_boot
 #
 # Copyright (C) 2013 RightScale, Inc.
@@ -17,11 +17,13 @@
 # limitations under the License.
 #
 
-rightscale_marker
+marker "recipe_start_rightscale" do
+  template "rightscale_audit_entry.erb"
+end
 
-if node[:rightscale_jenkins][:attach_slave_at_boot] == "true"
+if node[:'rs-jenkins'][:attach_slave_at_boot] == "true"
 	log " Attaching to master node at boot..."
-  include_recipe "rightscale_jenkins::do_attach_request"
+  include_recipe "rs-jenkins::do_attach_request"
 else
   log "  Attach slave at boot [skipped]"
 end

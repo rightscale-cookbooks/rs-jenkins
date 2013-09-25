@@ -2,8 +2,9 @@ site :opscode
 
 metadata
 
-cookbook "driveclient", git: "https://github.com/rightscale/rackspace_cookbooks.git", rel: "driveclient", tag: "v13.5.0-LTS"
-cookbook "cloudmonitoring", git: "https://github.com/rightscale/rackspace_cookbooks.git", rel: "cloudmonitoring", tag: "v13.5.0-LTS"
-cookbook "rightscale", git: "https://github.com/rightscale/rightscale_cookbooks.git", rel: "cookbooks/rightscale", tag: "v13.5.0-LTS"
-cookbook "sys", git: "https://github.com/rightscale/rightscale_cookbooks.git", rel: "cookbooks/sys", tag: "v13.5.0-LTS"
-cookbook "sys_firewall", git: "https://github.com/rightscale/rightscale_cookbooks.git", rel: "cookbooks/sys_firewall", tag: "v13.5.0-LTS"
+cookbook "driveclient", github: "rightscale/rackspace_cookbooks", rel: "driveclient", tag: "v13.5.0-LTS"
+cookbook "cloudmonitoring", github: "rightscale/rackspace_cookbooks", rel: "cloudmonitoring", tag: "v13.5.0-LTS"
+cookbook "rightscale", github: "rightscale/rightscale_cookbooks", rel: "cookbooks/rightscale", tag: "v13.5.0-LTS"
+cookbook "sys", github: "rightscale/rightscale_cookbooks", rel: "cookbooks/sys", tag: "v13.5.0-LTS"
+cookbook "sys_firewall", github: "rightscale/rightscale_cookbooks", rel: "cookbooks/sys_firewall", tag: "v13.5.0-LTS"
+cookbook "marker", github: "rightscale-cookbooks/marker"

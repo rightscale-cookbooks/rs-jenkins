@@ -80,7 +80,7 @@ Vagrant.configure("2") do |config|
     }
 
     chef.run_list = [
-        "recipe[rightscale_jenkins::default]"
+        "recipe[rs-jenkins::default]"
     ]
   end
 end
