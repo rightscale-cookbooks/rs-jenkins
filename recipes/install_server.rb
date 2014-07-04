@@ -64,7 +64,7 @@ when "centos"
 when "ubuntu"
   # Download the deb package file for the specified version
   remote_file "/tmp/jenkins_#{node[:'rs-jenkins'][:server][:version]}_all.deb" do
-    source "http://pkg.jenkins-ci.org/debian/binary/" +
+    source "https://s3-us-west-2.amazonaws.com/virtual-monkey/" +
       "jenkins_#{node[:'rs-jenkins'][:server][:version]}_all.deb"
   end
 
